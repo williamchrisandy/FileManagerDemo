@@ -34,63 +34,14 @@ class ViewController: UIViewController {
 
     @IBAction func addButtonClicked(_ sender: UIButton)
     {
-        let fileName = textFieldFileName.text!
-        guard let downloadURL = URL(string: textFieldURL.text!)
-        else
-        {
-            print("URL is not valid")
-            return
-        }
-        
-        let downloadTask = URLSession.shared.downloadTask(with: downloadURL)
-        {
-            url, response, error in
-            do
-            {
-                if let downloadFileURL = url
-                {
-                    let rootURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-                    let subDirectoryURL = rootURL.appendingPathComponent("Raw Data")
-                    
-                    try FileManager.default.createDirectory(at: subDirectoryURL, withIntermediateDirectories: true)
-                        
-                    let saveURL = subDirectoryURL.appendingPathComponent(fileName)
-                    
-                    try FileManager.default.moveItem(at: downloadFileURL, to: saveURL)
-                }
-            }
-            catch
-            {
-                print(error.localizedDescription)
-            }
-        }
-        downloadTask.resume()
+        //TODO: Download From Internet
     }
     
     @IBAction func refreshButtonClicked(_ sender: UIBarButtonItem)
     {
         arrayPhoto.removeAll()
         
-        do
-        {
-            let rootURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let subDirectoryURL = rootURL.appendingPathComponent("Raw Data")
-            
-            let contents = try FileManager.default.contentsOfDirectory(at: subDirectoryURL, includingPropertiesForKeys: nil)
-            
-            for content in contents
-            {
-                if let image = UIImage(contentsOfFile: content.path)
-                {
-                    let fileName = content.lastPathComponent
-                    arrayPhoto.append(Photo(image: image, name: fileName))
-                }
-            }
-        }
-        catch
-        {
-            print(error.localizedDescription)
-        }
+        //TODO: Load Data (from directory)
         
         pageControlPhoto.numberOfPages = arrayPhoto.count
         collectionViewPhoto.reloadData()
@@ -98,50 +49,17 @@ class ViewController: UIViewController {
     
     @IBAction func deleteAllButtonClicked(_ sender: UIBarButtonItem)
     {
-        do
-        {
-            let rootURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let subDirectoryURL = rootURL.appendingPathComponent("Raw Data")
-            try FileManager.default.removeItem(at: subDirectoryURL)
-        }
-        catch
-        {
-            print(error.localizedDescription)
-        }
+        //TODO: Delete
     }
     
     func save(text: String, name: String)
     {
-        do
-        {
-            let rootURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            let saveURL = rootURL.appendingPathComponent(name)
-            try text.write(to: saveURL, atomically: true, encoding: .utf8)
-        }
-        catch
-        {
-            print(error.localizedDescription)
-        }
+        //TODO: Create File .txt
     }
     
     func save(_ photo: Photo)
     {
-        do
-        {
-            let rootURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            let subDirectoryURL = rootURL.appendingPathComponent("Raw Data")
-
-            try FileManager.default.createDirectory(at: subDirectoryURL, withIntermediateDirectories: true)
-            
-            if let fileName = photo.name, let pngData = photo.image?.pngData()
-            {
-                let saveURL = subDirectoryURL.appendingPathComponent("\(fileName).png")
-                try pngData.write(to: saveURL)
-            }
-        }
-        catch {
-            print(error.localizedDescription)
-        }
+        //TODO: Create Directory, Create File .png
     }
 }
 
